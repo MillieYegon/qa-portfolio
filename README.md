@@ -12,7 +12,7 @@ Everything here is my own, independent work, built with public demo apps and syn
 | [Mobile automation guide](mobile-automation-guide/) | How I build stable Appium and WebdriverIO suites for React Native apps | Ready |
 | [Playwright framework](playwright-framework/) | Page objects, API-seeded test data, worker-isolated parallel runs, CI reporting, plus a skill that turns test cases into specs | Ready |
 | [Appium and WebdriverIO framework](appium-framework/) | The guide above, applied to an open-source React Native app: local emulator and BrowserStack from the same specs | Ready |
-| Bug severity eval | A severity rubric, graded dataset and blind holdout evaluation on public bug reports | Planned |
+| [Bug severity eval](severity-eval/) | A severity rubric, 30 labelled public bug reports, a Claude grading harness and a frozen holdout | Ready |
 
 ## How I approach quality
 

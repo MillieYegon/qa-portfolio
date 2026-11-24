@@ -1,0 +1,144 @@
+{
+  "set": "holdout",
+  "prompt": "prompts/classify-v1.md",
+  "exact": 10,
+  "adjacent": 14,
+  "total": 15,
+  "results": [
+    {
+      "id": "saleor-18411",
+      "url": "https://github.com/saleor/saleor/issues/18411",
+      "summary": "With two payment gateways initialised, the second receives the first one's payload",
+      "label": "major",
+      "note": "Payment initialisation is wrong for the second gateway",
+      "predicted": "major",
+      "reason": "Under the rule that one blocked configuration is Major, not Critical, stores with more than one payment gateway can't initialize the second one (here Stripe), so customers can't pay through it, and the only fix the reporter found is a source-code patch, not a realistic workaround."
+    },
+    {
+      "id": "saleor-18196",
+      "url": "https://github.com/saleor/saleor/issues/18196",
+      "summary": "Reporting a duplicate payment event with a different amount doesn't record a failure event",
+      "label": "medium",
+      "note": "Audit trail gap; payment state unaffected",
+      "predicted": "medium",
+      "reason": "The duplicate event with a different amount is still rejected, so no money is recorded wrongly and no workflow is blocked; only the audit record of the failed event is lost, which counts as a missing record under the Medium tier ('a notification or report is missing') rather than wrong money under Rule 3."
+    },
+    {
+      "id": "saleor-18087",
+      "url": "https://github.com/saleor/saleor/issues/18087",
+      "summary": "Two quick checkout updates race and leave the wrong total",
+      "label": "major",
+      "note": "Money rule: wrong amount charged",
+      "predicted": "major",
+      "reason": "Rule 3 (money is Major): quick successive checkoutLinesUpdate calls leave the checkout with a wrong total that persists after a refresh (230 EUR instead of 220 EUR), so customers can be overcharged, and the reporter's workarounds do not lower this from Major."
+    },
+    {
+      "id": "saleor-17899",
+      "url": "https://github.com/saleor/saleor/issues/17899",
+      "summary": "Bulk variant update returns a server error when re-adding an existing channel listing",
+      "label": "medium",
+      "note": "Edge input; correct operation works",
+      "predicted": "medium",
+      "reason": "The variant's channel listing can still be updated: the reporter's own expectation shows that using `update` for a channel that already exists is the correct path, which is a confirmed workaround (rule 4), so the 500 IntegrityError is an unhandled error on a non-core admin mutation rather than a blocked workflow."
+    },
+    {
+      "id": "saleor-17619",
+      "url": "https://github.com/saleor/saleor/issues/17619",
+      "summary": "Available quantity shows zero although stock is assigned",
+      "label": "major",
+      "note": "Can't sell the item. Reporter's 'Critical' title doesn't decide it",
+      "predicted": "medium",
+      "reason": "The report shows only that the quantityAvailable field reads 0 while the stock records are correct, and it never says checkout or sales are blocked, so this is a wrong value in a non-core query (Medium); the query also passes no channel argument and the report doesn't mention shipping zones, so it may turn out to be a configuration problem, and the 'Critical' in the title is ignored under rule 7."
+    },
+    {
+      "id": "saleor-17613",
+      "url": "https://github.com/saleor/saleor/issues/17613",
+      "summary": "The second page of a product listing returns the wrong number of products",
+      "label": "medium",
+      "note": "Pagination wrong; products reachable",
+      "predicted": "medium",
+      "reason": "The listing still works (the reporter confirms that requesting first: 50 returns every product), so rule 4's confirmed workaround makes this Medium: page 2 returns 9 products instead of 13, but nothing is blocked, no money is wrong and no data is lost."
+    },
+    {
+      "id": "saleor-17502",
+      "url": "https://github.com/saleor/saleor/issues/17502",
+      "summary": "A translated product name is dropped when it is identical to the original",
+      "label": "minor",
+      "note": "Same text shown either way",
+      "predicted": "medium",
+      "reason": "Under rule 5, the checkout and order still complete and only the translated name fields are wrongly blank; the untranslated name holds the same text, so the data is wrong but correctable and touches neither money nor stock."
+    },
+    {
+      "id": "saleor-17468",
+      "url": "https://github.com/saleor/saleor/issues/17468",
+      "summary": "Looking up a user by email is case-sensitive",
+      "label": "medium",
+      "note": "Lookup fails for different casing; workaround exists",
+      "predicted": "medium",
+      "reason": "Under the 'non-core query errors' rule this is Medium: a staff-only lookup misses users when the email's letter case differs, while customer flows, money and security are untouched and the query still works with the exact stored email."
+    },
+    {
+      "id": "saleor-17393",
+      "url": "https://github.com/saleor/saleor/issues/17393",
+      "summary": "Searching products by a Korean name returns nothing",
+      "label": "medium",
+      "note": "Search fails; browsing still works",
+      "predicted": "major",
+      "reason": "Searching for a product by its Korean name always comes back empty in both the dashboard and GraphQL, so anyone with Korean product names cannot find products that way, and the report gives no workaround (Rule 4: blocked with no realistic workaround stays Major; one configuration blocked is Major, not Critical)."
+    },
+    {
+      "id": "saleor-17349",
+      "url": "https://github.com/saleor/saleor/issues/17349",
+      "summary": "The public signing-key endpoint omits the algorithm field",
+      "label": "medium",
+      "note": "Some token libraries can't validate; others can",
+      "predicted": "major",
+      "reason": "Rule 1 (one user blocked is Major) decided it: the missing `alg` field stops the reporter's Privy custom-auth integration from working, and no workaround is confirmed, so the workflow can't be completed for that configuration, but it isn't down for users in general; the 'security concerns' are speculative, not a demonstrated access-control flaw."
+    },
+    {
+      "id": "saleor-17120",
+      "url": "https://github.com/saleor/saleor/issues/17120",
+      "summary": "Product image thumbnails show as broken after upload",
+      "label": "medium",
+      "note": "Images broken; purchasing still works",
+      "predicted": "not_a_bug",
+      "reason": "Configuration problem on the reporter's side: the logs show the thumbnail request reaching the dashboard's own nginx container (port 9000, looking for /app/dashboard/thumbnail/.../index.html) when it should reach the core API, which points to proxy or URL misconfiguration on this self-hosted instance and not a product defect. If it were a real defect, it would be Medium, because the upload appears to complete and only the thumbnail display fails. The screenshot was not visible, so this is graded from the text and logs."
+    },
+    {
+      "id": "saleor-16663",
+      "url": "https://github.com/saleor/saleor/issues/16663",
+      "summary": "Stock isn't reduced to zero after fulfilment, so the product stays available",
+      "label": "major",
+      "note": "Overselling",
+      "predicted": "major",
+      "reason": "Fulfillment leaves stock at 1 when it should be 0, so customers can order products that are no longer available; this is overselling stock and silently wrong data that causes harm, which Rules 5 and 6 make Major."
+    },
+    {
+      "id": "saleor-16238",
+      "url": "https://github.com/saleor/saleor/issues/16238",
+      "summary": "A zero-total order with a voucher is fully paid but stays unconfirmed",
+      "label": "medium",
+      "note": "State inconsistency; order exists and can be confirmed",
+      "predicted": "medium",
+      "reason": "Rule 4 (a confirmed workaround supports Medium): the zero-total order is still created and marked fully paid, and the reporter says they get it moving by confirming it manually, so the workflow can still be completed and no money is charged wrongly."
+    },
+    {
+      "id": "saleor-16156",
+      "url": "https://github.com/saleor/saleor/issues/16156",
+      "summary": "Products marked unavailable for purchase stay in customers' carts",
+      "label": "medium",
+      "note": "Customer can remove the item and check out",
+      "predicted": "medium",
+      "reason": "The report only says users are unaware of unavailable items and will try to check out; it does not say checkout is blocked or that anyone is charged wrongly, so the flow can still be completed and the stale cart item is a correctable missing cleanup (rule 5, recoverable is Medium)."
+    },
+    {
+      "id": "saleor-16522",
+      "url": "https://github.com/saleor/saleor/issues/16522",
+      "summary": "Asks how to add a REST API alongside the GraphQL API",
+      "label": "not_a_bug",
+      "note": "Feature or support question",
+      "predicted": "not_a_bug",
+      "reason": "This is a support question about adding Django REST Framework to Saleor. The errors come from the reporter's own setup, not from a defect in the product, so it falls under the Not a bug category for support questions, feature requests and configuration problems on the reporter's side."
+    }
+  ]
+}

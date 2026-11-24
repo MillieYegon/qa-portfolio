@@ -1,0 +1,144 @@
+{
+  "set": "tuning",
+  "prompt": "prompts/classify-v1.md",
+  "exact": 12,
+  "adjacent": 14,
+  "total": 15,
+  "results": [
+    {
+      "id": "saleor-19995",
+      "url": "https://github.com/saleor/saleor/issues/19995",
+      "summary": "Unused type parameters left in the code after a syntax change",
+      "label": "minor",
+      "note": "Developer hygiene; no user effect",
+      "predicted": "minor",
+      "reason": "Unused TypeVar declarations are developer-only code hygiene with no effect on users, so they fall under Minor (cosmetic or developer-only issues)."
+    },
+    {
+      "id": "saleor-19983",
+      "url": "https://github.com/saleor/saleor/issues/19983",
+      "summary": "Price recalculation ignores the 'only changed products' filter and recalculates everything",
+      "label": "medium",
+      "note": "Results correct, work wasted",
+      "predicted": "medium",
+      "reason": "The recalculation still finishes and the prices come out right, because recalculating listings that aren't dirty is just unneeded work; under the Medium rule this is degraded performance, not wrong money or a blocked workflow."
+    },
+    {
+      "id": "saleor-19907",
+      "url": "https://github.com/saleor/saleor/issues/19907",
+      "summary": "Bulk-created variants without SKU or attributes get garbled names",
+      "label": "medium",
+      "note": "Wrong data, correctable",
+      "predicted": "medium",
+      "reason": "The variants are still created and can be sold, and the wrong name is correctable data that can be fixed by updating it, so the recoverable-is-Medium rule applies."
+    },
+    {
+      "id": "saleor-19906",
+      "url": "https://github.com/saleor/saleor/issues/19906",
+      "summary": "Removing a promo code by ID can remove a gift card from the checkout instead",
+      "label": "medium",
+      "note": "Checkout still completes; gift card can be re-applied. Arguable Major (money)",
+      "predicted": "medium",
+      "reason": "Rule 5 (recoverable is Medium) decides it: the wrong branch calls checkout.gift_cards.remove(), which only detaches the gift card from this checkout rather than deleting it, the response visibly shows the empty giftCards list, and the customer can re-apply the card and still complete checkout, so no money or data is lost unrecoverably."
+    },
+    {
+      "id": "saleor-19890",
+      "url": "https://github.com/saleor/saleor/issues/19890",
+      "summary": "Server fails to start when installed without development dependencies",
+      "label": "medium",
+      "note": "Confirmed workaround: install dev dependencies; official image unaffected",
+      "predicted": "major",
+      "reason": "Saleor cannot start at all in one configuration (a production install without dev dependencies), so that workflow can't be completed; under rule 1, one configuration blocked is Major, not Critical, because the official Docker image and other installs still work."
+    },
+    {
+      "id": "saleor-19423",
+      "url": "https://github.com/saleor/saleor/issues/19423",
+      "summary": "A deactivated account can reactivate itself with an old confirmation token",
+      "label": "major",
+      "note": "Security rule",
+      "predicted": "major",
+      "reason": "Security is Major (Rule 2): a deactivated account can reactivate itself through accountConfirm, which defeats staff access control such as offboarding, even though no one is blocked."
+    },
+    {
+      "id": "saleor-19295",
+      "url": "https://github.com/saleor/saleor/issues/19295",
+      "summary": "Scheduled task runner crashes on every startup with the database scheduler",
+      "label": "major",
+      "note": "Scheduled jobs never run",
+      "predicted": "major",
+      "reason": "Under the money rule, Major applies because Beat crashing under DatabaseScheduler silently stops catalogue promotion recalculation, so customers see wrong prices and totals. It is not Critical because it affects one configuration and does not take the platform down for users in general, and running tasks by hand is not a realistic workaround."
+    },
+    {
+      "id": "saleor-19220",
+      "url": "https://github.com/saleor/saleor/issues/19220",
+      "summary": "Concurrent webhook and checkout completion can create duplicate payment intents",
+      "label": "major",
+      "note": "Money rule: possible double charge",
+      "predicted": "major",
+      "reason": "Under the money rule, a race that can create a second Stripe PaymentIntent and charge a customer twice is Major; it only happens under concurrent timing, not for all users, so it is not Critical."
+    },
+    {
+      "id": "saleor-19202",
+      "url": "https://github.com/saleor/saleor/issues/19202",
+      "summary": "Turning off usage telemetry makes the API server crash at startup",
+      "label": "medium",
+      "note": "Confirmed workaround: leave the setting on",
+      "predicted": "major",
+      "reason": "The API server won't start for anyone using the documented SEND_USAGE_TELEMETRY=false setting, so this configuration is blocked; under 'one user blocked is Major, not Critical' it is Major, because telemetry-enabled installs still run. The only workaround is to turn telemetry back on, which drops the opt-out the user was trying to apply, so it doesn't support Medium."
+    },
+    {
+      "id": "saleor-18773",
+      "url": "https://github.com/saleor/saleor/issues/18773",
+      "summary": "Asks why some local payment methods fail through the payment provider while cards work",
+      "label": "not_a_bug",
+      "note": "Support and configuration question",
+      "predicted": "medium",
+      "reason": "Checkout can still be completed because card, PayPal and Klarna payments are confirmed to work, so the confirmed-workaround rule (rule 4) makes this Medium rather than Major; the report reads partly like a support question and may turn out to be a Stripe configuration problem on the reporter's side, but nothing in the text confirms that."
+    },
+    {
+      "id": "saleor-18725",
+      "url": "https://github.com/saleor/saleor/issues/18725",
+      "summary": "Select fields in the product onboarding flow ignore the chosen value",
+      "label": "major",
+      "note": "Product with select attributes can't be created that way",
+      "predicted": "major",
+      "reason": "Rule 1 (one user blocked is Major, not Critical): select fields in the onboarding product-creation flow don't apply the chosen value, so this reporter can't create a product and has no workaround, but the report describes one local docker-compose setup, not an outage for users in general (screenshots not visible; graded from the text)."
+    },
+    {
+      "id": "saleor-18716",
+      "url": "https://github.com/saleor/saleor/issues/18716",
+      "summary": "Checkout rejects Kosovo as a shipping country",
+      "label": "major",
+      "note": "A whole market can't check out",
+      "predicted": "major",
+      "reason": "Checkout can't be completed for any customer whose shipping address is in Kosovo (XK), and the report gives no confirmed workaround, so under Rule 1 a workflow blocked for one country is Major, not Critical."
+    },
+    {
+      "id": "saleor-18627",
+      "url": "https://github.com/saleor/saleor/issues/18627",
+      "summary": "A sale discount is sometimes applied several times to order lines",
+      "label": "major",
+      "note": "Money rule: revenue loss",
+      "predicted": "major",
+      "reason": "Rule 3 (money is Major): the sale discount is applied two or three times, so the merchant loses revenue on that customer's orders, and the report's text gives the prices to show it (67.15€ charged as 55.30€); it affects one account, not users in general, so it is not Critical."
+    },
+    {
+      "id": "saleor-18342",
+      "url": "https://github.com/saleor/saleor/issues/18342",
+      "summary": "Staff recipients don't get the order confirmation email",
+      "label": "medium",
+      "note": "Order processes; notification missing",
+      "predicted": "medium",
+      "reason": "Orders are still created and confirmed, so the workflow can be completed; the only failure is a missing staff notification, which the rubric lists as Medium."
+    },
+    {
+      "id": "saleor-18262",
+      "url": "https://github.com/saleor/saleor/issues/18262",
+      "summary": "Querying the total discount field on an order returns a null error",
+      "label": "medium",
+      "note": "One field errors; workflow continues",
+      "predicted": "medium",
+      "reason": "The discount data can still be retrieved: the reporter confirms the deprecated `amount` field returns correct results, so Rule 4 (a confirmed workaround supports Medium) applies, and the rubric classes a non-core query error as Medium."
+    }
+  ]
+}
