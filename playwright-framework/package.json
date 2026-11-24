@@ -1,0 +1,21 @@
+{
+  "name": "toolshop-playwright-framework",
+  "version": "1.0.0",
+  "description": "Playwright E2E framework for a public demo store: page objects, API-seeded data, worker-isolated parallel runs, CI reporting",
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:payments": "playwright test --grep @payments",
+    "typecheck": "tsc -p tsconfig.json",
+    "report": "playwright show-report"
+  },
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "private": true
+}

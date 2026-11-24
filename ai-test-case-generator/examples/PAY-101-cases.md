@@ -1,83 +1,117 @@
-# PAY-101: generated cases (draft)
+# PAY-101: generated cases (drafts)
 
-*Output of `/generate-test-cases` on the synthetic ticket. All data is invented.*
+*Output of `/generate-test-cases PAY-101` on the synthetic ticket. All data is invented.*
 
-**Coverage check:** 1 existing case found, "Send money: recipient list shows recent recipients". It now needs an update (saved recipients appear newest first). No duplicates.
-
-**Skipped:** none.
+**Project:** PAYQ · **Suite:** Recipients / Saving (new, under Recipients) · **Tags:** `PAY-101`, `ai-generated`
 
 ---
 
-### 1. Recipients: account name shows after a valid account lookup
-**Priority:** High · **Tags:** PAY-101, recipients
-**Preconditions:** Signed in as a verified customer. Test bank "Demo Bank" has account 0123456789 named "Ada Okafor".
+## Created
 
-| Step | Expected |
-|---|---|
-| 1. Open Send money, tap Add recipient | Add recipient screen opens with Bank and Account number empty, Save disabled |
-| 2. Select "Demo Bank", enter 0123456789 | A loading indicator shows while the account is looked up |
-| 3. Wait for the lookup | "Ada Okafor" is shown under the account number and Save is enabled |
+### PAYQ-412 · Verify that a recipient's account name appears after entering a valid bank and 10-digit account number
+**Priority:** High
+**Preconditions:**
+Customer has a verified identity
+Customer is signed in to the mobile app
 
-### 2. Recipients: saving is blocked when the account lookup fails
-**Priority:** High · **Tags:** PAY-101, recipients
-**Preconditions:** Signed in as a verified customer. Account 9999999999 does not exist at "Demo Bank".
+| # | Step | Expected result |
+|---|---|---|
+| 1 | Open **Send money** | |
+| 2 | Tap `Add recipient` | **Add recipient** opens with `Save` disabled |
+| 3 | Select Demo Bank in `Bank` | |
+| 4 | Enter 0123456789 in `Account number` | A **loading indicator** shows while the account is checked |
+| 5 | Wait for the check to finish | **Ada Okafor** appears under the account number and `Save` is enabled |
 
-| Step | Expected |
-|---|---|
-| 1. Select "Demo Bank", enter 9999999999 | Lookup runs |
-| 2. Wait for the lookup | "We couldn't verify this account" is shown; no account name; Save stays disabled |
+### PAYQ-413 · Verify that a recipient can't be saved when the account check fails, and the account name stays empty
+**Priority:** High
+**Preconditions:**
+Customer has a verified identity
+Customer is signed in to the mobile app
 
-### 3. Recipients: account number with fewer than 10 digits is not looked up
-**Priority:** Medium · **Tags:** PAY-101, recipients, validation
+| # | Step | Expected result |
+|---|---|---|
+| 1 | Open **Send money** and tap `Add recipient` | |
+| 2 | Select Demo Bank and enter 9999999999 | |
+| 3 | Wait for the check to finish | **Couldn't verify** message shows, no name appears, and `Save` **stays disabled** |
 
-| Step | Expected |
-|---|---|
-| 1. Select "Demo Bank", enter 012345678 (9 digits) | No lookup runs; Save stays disabled |
-| 2. Enter a 10th digit, 9 | Lookup runs |
+### PAYQ-414 · Verify that the account check only starts once the account number reaches all 10 digits
+**Priority:** Medium
+**Preconditions:**
+Customer has a verified identity
+Customer is signed in to the mobile app
 
-### 4. Recipients: nickname is limited to 30 characters
-**Priority:** Low · **Tags:** PAY-101, recipients, validation
-**Preconditions:** A verified account has been looked up (case 1).
+| # | Step | Expected result |
+|---|---|---|
+| 1 | Open **Add recipient** and select Demo Bank | |
+| 2 | Enter 012345678 in `Account number` | **No check runs** and `Save` stays disabled |
+| 3 | Add a final 9 | The **account check starts** |
 
-| Step | Expected |
-|---|---|
-| 1. Type "Ada from the Lagos office team!!" (32 characters) in Nickname | Field stops accepting input at 30 characters |
-| 2. Tap Save | Recipient saves with the 30-character nickname |
+### PAYQ-415 · Verify that a newly saved recipient appears first on Send money and is still there after reopening the app
+**Priority:** High
+**Preconditions:**
+Customer has a verified identity
+Customer is signed in to the mobile app
 
-### 5. Recipients: saved recipient appears first on Send money
-**Priority:** High · **Tags:** PAY-101, recipients
+| # | Step | Expected result |
+|---|---|---|
+| 1 | Open **Add recipient**, select Demo Bank and enter 0123456789 | Ada Okafor appears |
+| 2 | Enter Ada in `Nickname` | |
+| 3 | Tap `Save` | The app returns to **Send money** |
+| 4 | Look at the recipient list | **Ada** (Demo Bank ••6789) is **first in the list** |
+| 5 | Force-close the app and reopen it | |
+| 6 | Open **Send money** | **Ada is still first** |
 
-| Step | Expected |
-|---|---|
-| 1. Save "Ada Okafor" with nickname "Ada" | Confirmation shows; app returns to Send money |
-| 2. Look at the recipient list | "Ada" (Ada Okafor, Demo Bank ••6789) is first in the list |
-| 3. Close and reopen the app, open Send money | "Ada" is still first |
+### PAYQ-416 · Verify that saving the same bank and account number a second time is refused with a duplicate warning
+**Priority:** Medium
+**Preconditions:**
+Customer has a verified identity
+Customer is signed in to the mobile app
 
-### 6. Recipients: saving a duplicate recipient is refused
-**Priority:** Medium · **Tags:** PAY-101, recipients
-**Preconditions:** "Ada Okafor", Demo Bank 0123456789 is already saved.
+| # | Step | Expected result |
+|---|---|---|
+| 1 | Save Demo Bank 0123456789 as a recipient | |
+| 2 | Tap `Add recipient` again and enter the same bank and number | |
+| 3 | Tap `Save` | **Duplicate warning** appears and the list keeps **one entry** for this account |
 
-| Step | Expected |
-|---|---|
-| 1. Add recipient with Demo Bank and 0123456789, tap Save | "This recipient is already saved" is shown; the list still has one entry for this account |
+### PAYQ-417 · Verify that the nickname field stops accepting characters after 30 and saves the trimmed nickname
+**Priority:** Low
+**Preconditions:**
+Customer has a verified identity
+Customer is signed in to the mobile app
 
-### 7. Recipients: unverified customer is asked to verify instead of saving
-**Priority:** High · **Tags:** PAY-101, recipients, permissions
-**Preconditions:** Signed in as a customer whose identity is not verified.
+| # | Step | Expected result |
+|---|---|---|
+| 1 | Open **Add recipient**, select Demo Bank and enter 0123456789 | |
+| 2 | Type Ada from the Lagos office team!! in `Nickname` | The field **stops at 30 characters** |
+| 3 | Tap `Save` | The recipient saves with the **30-character nickname** |
 
-| Step | Expected |
-|---|---|
-| 1. Open Send money, tap Add recipient | A prompt to verify identity is shown with a Verify now button; the Add recipient form does not open |
+### PAYQ-418 · Verify that a customer without a verified identity is asked to verify instead of seeing the recipient form
+**Priority:** High
+**Preconditions:**
+Customer has not verified their identity
+Customer is signed in to the mobile app
+
+| # | Step | Expected result |
+|---|---|---|
+| 1 | Open **Send money** | |
+| 2 | Tap `Add recipient` | A **verify identity prompt** shows and the recipient form **does not open** |
 
 ---
 
-## Proposed update to an existing case
+## Skipped (already covered)
 
-**"Send money: recipient list shows recent recipients"**
-- Before: Expected "Recipients are listed alphabetically"
-- After: Expected "Saved recipients are listed newest first"
+- Recipient list loads on **Send money**: covered by PAYQ-120.
 
-## Open questions
+## Suggested updates
 
-- Is the duplicate check per customer, or across shared business accounts?
-- What does the app show if the lookup times out rather than failing?
+- **PAYQ-121** · Verify that the recipient list on Send money shows saved recipients in order
+  Expected result for step 2: change "listed alphabetically" to **"listed newest first"**.
+
+## Suggested deprecations
+
+- None.
+
+## Notes
+
+- Open question: is the duplicate check per customer, or shared across a business account?
+- Open question: what should show when the account check times out rather than fails?

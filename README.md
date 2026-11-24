@@ -10,7 +10,7 @@ Everything here is my own, independent work, built with public demo apps and syn
 |---|---|---|
 | [AI test case generator](ai-test-case-generator/) | A Claude Code skill that turns a ticket into reviewed, deduplicated test cases | Ready |
 | [Mobile automation guide](mobile-automation-guide/) | How I build stable Appium and WebdriverIO suites for React Native apps | Ready |
-| Playwright framework | Page objects, API-seeded test data, worker-isolated parallel runs, CI reporting | Planned |
+| [Playwright framework](playwright-framework/) | Page objects, API-seeded test data, worker-isolated parallel runs, CI reporting, plus a skill that turns test cases into specs | Ready |
 | Appium and WebdriverIO framework | The guide above, applied to an open-source sample app, local devices plus a device cloud | Planned |
 | Bug severity eval | A severity rubric, graded dataset and blind holdout evaluation on public bug reports | Planned |
 
